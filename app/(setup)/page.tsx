@@ -1,13 +1,10 @@
 import { initialProfile } from "@/lib/initial-profile";
+import { InitialModal } from "@/components/modals/initial-modal";
 
 const SetupPage = async () => {
   const profile = await initialProfile();
 
-  return (
-    <div>
-      <h1>{profile.name}</h1>
-    </div>
-  );
+  return <InitialModal />;
 };
 
 export default SetupPage;
