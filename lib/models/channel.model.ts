@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const ChannelType = Object.freeze({
+export const ChannelType = Object.freeze({
   TEXT: 'TEXT',
   AUDIO: 'AUDIO',
   VIDEO: 'VIDEO'

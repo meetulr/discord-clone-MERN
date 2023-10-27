@@ -1,6 +1,6 @@
 import { currentUser, redirectToSignIn } from "@clerk/nextjs";
 
-import getOrCreateProfile from "@/lib/actions/profile.actions";
+import { getProfile, createProfile } from "@/lib/actions/profile.actions";
 
 export const initialProfile = async () => {
   const user = await currentUser();
@@ -9,7 +9,13 @@ export const initialProfile = async () => {
     return redirectToSignIn();
   }
 
-  const profile = await getOrCreateProfile({
+  const profile = await getProfile();
+
+  if(profile){
+    return profile;
+  }
+
+  const newProfile = await createProfile({
     userId: user.id,
     firstName: user.firstName || "",
     lastName: user.lastName || "",
@@ -17,5 +23,5 @@ export const initialProfile = async () => {
     email: user.emailAddresses[0].emailAddress
   });
 
-  return profile;
+  return newProfile;
 };

@@ -1,11 +1,29 @@
-import { FilterQuery, SortOrder } from "mongoose";
-import { revalidatePath } from "next/cache";
-
-import Profile from "@/lib/models/profile.model";
+import { auth } from "@clerk/nextjs";
 
 import { connectToDB } from "@/lib/db";
 
-interface profileProps {
+import Profile from "@/lib/models/profile.model";
+
+
+export const getProfile = async () => {
+  try {
+    connectToDB();
+
+    const { userId } = auth();
+
+    if (!userId) {
+      return null;
+    }
+
+    const profile = await Profile.findOne({ userId });
+
+    return profile;
+  } catch (error: any) {
+    console.log("failed to get profile", error.message);
+  }
+}
+
+interface ProfileProps {
   userId: string;
   firstName: string;
   lastName: string;
@@ -13,17 +31,17 @@ interface profileProps {
   email: string;
 }
 
-async function getOrCreateProfile({ userId, firstName, lastName, imageUrl, email }: profileProps) {
+export const createProfile = async ({
+  userId,
+  firstName,
+  lastName,
+  imageUrl,
+  email
+}: ProfileProps) => {
   try {
     connectToDB();
 
-    let profile = await Profile.findOne({ userId });
-
-    if (profile) {
-      return profile;
-    }
-
-    profile = new Profile({
+    const profile = new Profile({
       userId,
       name: `${firstName} ${lastName}`,
       imageUrl,
@@ -34,8 +52,6 @@ async function getOrCreateProfile({ userId, firstName, lastName, imageUrl, email
 
     return profile;
   } catch (error: any) {
-    console.log("failed to get or create Profile ", error.message);
+    console.log("failed to create Profile ", error.message);
   }
 }
-
-export default getOrCreateProfile;

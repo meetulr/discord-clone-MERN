@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const MemberRole = Object.freeze({
+export const MemberRole = Object.freeze({
   ADMIN: 'ADMIN',
   MODERATOR: 'MODERATOR',
   GUEST: 'GUEST'
