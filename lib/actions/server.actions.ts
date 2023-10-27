@@ -9,7 +9,6 @@ import { MemberRole } from "@/lib/models/member.model";
 export const getServer = async (profileId: string) => {
   try {
     connectToDB();
-
     const member = await Member.findOne({ profileId });
 
     if (!member) {
@@ -22,6 +21,7 @@ export const getServer = async (profileId: string) => {
     console.log("cannot find the server", error);
   }
 }
+
 
 interface ServerProps {
   profileId: string;
@@ -72,5 +72,20 @@ export const createServer = async ({
     return updatedServer;
   } catch (error: any) {
     console.log("failed to create Server ", error.message);
+  }
+}
+
+
+export const getServers = async (profileId: string) => {
+  try {
+    connectToDB();
+
+    const members = await Member.find({ profileId: profileId });
+    const memberIds = members.map(member => member._id);
+    const servers = await Server.find({ members: { $in: memberIds } });
+
+    return servers;
+  } catch (error) {
+    console.log("couldn't get the servers", error);
   }
 }
