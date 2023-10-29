@@ -8,10 +8,10 @@ import { getServer } from "@/lib/actions/server.actions";
 const SetupPage = async () => {
   const profile = await initialProfile();
 
-  const server = await getServer(profile.id);
+  const serverId = await getServer(profile.id);
 
-  if (server) {
-    return redirect(`/servers/${server.id}`);
+  if (serverId) {
+    return redirect(`/servers/${serverId}`);
   }
 
   return <InitialModal />;

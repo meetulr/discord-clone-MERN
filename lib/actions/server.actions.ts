@@ -11,12 +11,7 @@ export const getServer = async (profileId: string) => {
     connectToDB();
     const member = await Member.findOne({ profileId });
 
-    if (!member) {
-      return null;
-    } else {
-      const server = await Server.findOne({ members: member._id });
-      return server;
-    }
+    return member?.serverId;
   } catch (error) {
     console.log("cannot find the server", error);
   }
@@ -41,31 +36,31 @@ export const createServer = async ({
       name,
       imageUrl,
       inviteCode: uuidv4(),
-      profileId: profileId
+      profileId
     });
 
 
-    const savedServer = await newServer.save();
+    await newServer.save();
 
     const newChannel = new Channel({
       name: "general",
-      profileId: profileId,
-      serverId: savedServer._id
+      profileId,
+      serverId: newServer._id
     });
 
-    const savedChannel = await newChannel.save();
+    await newChannel.save();
 
     const newMember = new Member({
-      profileId: profileId,
+      profileId,
       role: MemberRole.ADMIN,
-      serverId: savedServer._id
+      serverId: newServer._id
     });
 
-    const savedMember = await newMember.save();
+    await newMember.save();
 
     const updatedServer = await Server.findOneAndUpdate(
-      { _id: savedServer._id },
-      { $push: { channels: savedChannel._id, members: savedMember._id } },
+      { _id: newServer._id },
+      { $push: { channels: newChannel._id, members: newMember._id } },
       { new: true }
     );
 
