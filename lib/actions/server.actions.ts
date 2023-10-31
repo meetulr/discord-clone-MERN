@@ -5,6 +5,7 @@ import Server from "@/lib/models/server.model";
 import Member from "@/lib/models/member.model";
 import Channel from "@/lib/models/channel.model";
 import { MemberRole } from "@/lib/models/member.model";
+
 import { transformFunction } from "../mongoose.utils";
 import { ServerObject } from "../object-interface";
 
@@ -129,5 +130,67 @@ export const getCurrentServer = async (serverId: string, profileId: string) => {
     }
   } catch (error) {
     console.log("couldn't get the servers", error);
+  }
+}
+
+interface UpdateInviteCodeProps {
+  serverId: string;
+  profileId: string;
+}
+
+export const upDateInviteCode = async ({
+  serverId,
+  profileId
+}: UpdateInviteCodeProps) => {
+  try {
+    connectToDB();
+
+    const server: ServerObject | null = await Server.findOneAndUpdate(
+      { _id: serverId, profileId },
+      { inviteCode: uuidv4() },
+      { new: true }
+    );
+
+    return server;
+  } catch (error) {
+    console.log("couldn't update the invite code", error);
+  }
+}
+
+interface InviteMemberProps {
+  inviteCode: string;
+  profileId: string;
+}
+
+export const inviteMember = async ({
+  inviteCode,
+  profileId
+}: InviteMemberProps) => {
+  try {
+    connectToDB();
+
+    const server = await Server.findOne({ inviteCode: inviteCode })
+      .populate("members");
+
+    const member = server.members.find((member: any) => member.profileId.toString() === profileId);
+
+    if (member) {
+      return server;
+    }
+
+    const newMember = new Member({
+      profileId,
+      serverId: server._id
+    });
+
+    await newMember.save();
+
+    server.members.push(newMember._id);
+
+    const updatedServer = await server.save();
+
+    return updatedServer.toObject({ transform: transformFunction });
+  } catch (error) {
+    console.log("couldn't add new member to the server", error);
   }
 }
