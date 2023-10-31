@@ -5,13 +5,15 @@ import Server from "@/lib/models/server.model";
 import Member from "@/lib/models/member.model";
 import Channel from "@/lib/models/channel.model";
 import { MemberRole } from "@/lib/models/member.model";
+import { transformFunction } from "../mongoose.utils";
+import { ServerObject } from "../object-interface";
 
 export const getServer = async (profileId: string) => {
   try {
     connectToDB();
     const member = await Member.findOne({ profileId });
 
-    return member?.serverId;
+    return member?.serverId.toString();
   } catch (error) {
     console.log("cannot find the server", error);
   }
@@ -64,7 +66,7 @@ export const createServer = async ({
       { new: true }
     );
 
-    return updatedServer;
+    return updatedServer.toObject({ transform: transformFunction });
   } catch (error: any) {
     console.log("failed to create Server ", error.message);
   }
@@ -75,11 +77,56 @@ export const getServers = async (profileId: string) => {
   try {
     connectToDB();
 
-    const members = await Member.find({ profileId: profileId });
-    const memberIds = members.map(member => member._id);
-    const servers = await Server.find({ members: { $in: memberIds } });
+    const members = await Member.find({ profileId });
 
+    if (!members) {
+      return null;
+    }
+
+    const memberIds = members.map(member => member._id);
+    let servers = await Server.find({ members: { $in: memberIds } });
+
+    if (!servers) {
+      return null;
+    }
+
+    servers = servers.map((server) => server.toObject({ transform: transformFunction }));
     return servers;
+  } catch (error) {
+    console.log("couldn't get the servers", error);
+  }
+}
+
+export const getCurrentServer = async (serverId: string, profileId: string) => {
+  try {
+    connectToDB();
+
+    let server = await Server.findOne({ _id: serverId })
+      .populate({
+        path: 'channels',
+        options: { sort: { 'createdAt': 'asc' } }
+      })
+      .populate({
+        path: 'members',
+        populate: { path: 'profileId' }
+      });
+
+    if (!server) {
+      return null;
+    }
+
+
+    const roleOrder: any = { 'ADMIN': 1, 'MODERATOR': 2, 'GUEST': 3 };
+    server.members.sort((a: any, b: any) => roleOrder[a.role] - roleOrder[b.role]);
+
+    const memberExists = server.members.some((member: any) => member.profileId._id.toString() === profileId);
+
+    if (!memberExists) {
+      return null;
+    }
+    else {
+      return server.toObject({ transform: transformFunction });
+    }
   } catch (error) {
     console.log("couldn't get the servers", error);
   }

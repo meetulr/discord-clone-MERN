@@ -40,6 +40,6 @@ const memberSchema = new mongoose.Schema({
 
 Object.assign(memberSchema.statics, { MemberRole });
 
-const Member = mongoose.models.Member || mongoose.model('Member', memberSchema);
+const Member = mongoose.models?.Member || mongoose.model('Member', memberSchema);
 
 export default Member;

@@ -29,6 +29,6 @@ const channelSchema = new mongoose.Schema({
 
 Object.assign(channelSchema.statics, { ChannelType });
 
-const Channel = mongoose.models.Channel || mongoose.model('Channel', channelSchema);
+const Channel = mongoose.models?.Channel || mongoose.model('Channel', channelSchema);
 
 export default Channel;

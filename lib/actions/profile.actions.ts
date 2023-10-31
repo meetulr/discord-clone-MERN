@@ -3,6 +3,7 @@ import { auth } from "@clerk/nextjs";
 import { connectToDB } from "@/lib/db";
 
 import Profile from "@/lib/models/profile.model";
+import { transformFunction } from "@/lib/mongoose.utils";
 
 
 export const getProfile = async () => {
@@ -17,7 +18,11 @@ export const getProfile = async () => {
 
     const profile = await Profile.findOne({ userId });
 
-    return profile;
+    if(!profile){
+      return null;
+    }
+
+    return profile.toObject({ transform: transformFunction });
   } catch (error: any) {
     console.log("failed to get profile", error.message);
   }
@@ -50,7 +55,7 @@ export const createProfile = async ({
 
     await profile.save();
 
-    return profile;
+    return profile.toObject({ transform: transformFunction });
   } catch (error: any) {
     console.log("failed to create Profile ", error.message);
   }
