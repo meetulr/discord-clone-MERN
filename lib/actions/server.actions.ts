@@ -194,3 +194,31 @@ export const inviteMember = async ({
     console.log("couldn't add new member to the server", error);
   }
 }
+
+interface UpdateServerProps {
+  serverId: string;
+  profileId: string;
+  name: string;
+  imageUrl: string;
+}
+
+export const updateServer = async ({
+  serverId,
+  profileId,
+  name,
+  imageUrl
+}: UpdateServerProps) => {
+  try {
+    connectToDB();
+
+    const server = await Server.findOneAndUpdate(
+      { _id: serverId, profileId },
+      { name, imageUrl },
+      { new: true }
+    );
+
+    return server;
+  } catch (error) {
+    console.log("couldn't update the server", error);
+  }
+}
