@@ -221,3 +221,82 @@ export const updateServer = async ({
     console.log("couldn't update the server", error);
   }
 }
+
+interface UpdateMemberRoleProps {
+  profileId: string;
+  serverId: string;
+  memberId: string;
+  role: string;
+}
+
+export const updateMemberRole = async ({
+  profileId,
+  serverId,
+  memberId,
+  role
+}: UpdateMemberRoleProps) => {
+  try {
+    connectToDB();
+
+    let server = await Server.findOne({ _id: serverId, profileId: profileId })
+      .populate({
+        path: 'members',
+      });
+
+    const member = server.members.find((member: any) => member._id.toString() === memberId);
+
+    if (member) {
+      member.role = role;
+      await server.save();
+    }
+
+    await Member.updateOne({ _id: memberId }, { role });
+
+    server = await Server.findOne({ _id: serverId, profileId })
+      .populate({
+        path: 'members',
+        populate: { path: 'profileId' }
+      });
+
+    return server.toObject({ transform: transformFunction });
+  } catch (error) {
+    console.log("couldn't update the member role", error);
+  }
+}
+
+
+interface KickMemberProps {
+  profileId: string;
+  serverId: string;
+  memberId: string;
+}
+
+export const kickMember = async ({
+  profileId,
+  serverId,
+  memberId,
+}: KickMemberProps) => {
+  try {
+    connectToDB();
+
+    let server = await Server.findOne({ _id: serverId, profileId: profileId })
+      .populate({
+        path: 'members',
+      });
+
+    server.members = server.members.filter((member: any) => member._id.toString() !== memberId);
+    await server.save();
+
+    await Member.deleteOne({ _id: memberId });
+
+    server = await Server.findOne({ _id: serverId, profileId })
+      .populate({
+        path: 'members',
+        populate: { path: 'profileId' }
+      });
+
+    return server.toObject({ transform: transformFunction });
+  } catch (error) {
+    console.log("couldn't update the member role", error);
+  }
+}

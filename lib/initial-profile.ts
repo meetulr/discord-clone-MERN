@@ -1,7 +1,7 @@
 import { currentUser, redirectToSignIn } from "@clerk/nextjs";
 
 import { getProfile, createProfile } from "@/lib/actions/profile.actions";
-import { ProfileObject } from "./object-interface";
+import { ProfileObject } from "./object-types";
 
 export const initialProfile = async () => {
   const user = await currentUser();

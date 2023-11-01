@@ -3,7 +3,7 @@ import { ChannelType } from "@/lib/models/channel.model";
 import { getProfile } from "@/lib/actions/profile.actions";
 import { getCurrentServer } from "@/lib/actions/server.actions";
 
-import { ChannelObject, MemberObject, ProfileObject, ServerObject } from "@/lib/object-interface";
+import { ChannelObject, MemberObject, ProfileObject, ServerObject } from "@/lib/object-types";
 
 import { ServerHeader } from "@/components/server/server-header";
 

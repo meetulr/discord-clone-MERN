@@ -2,7 +2,7 @@ import { redirectToSignIn } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 
 import { getProfile } from "@/lib/actions/profile.actions";
-import { ProfileObject, ServerObject } from "@/lib/object-interface";
+import { ProfileObject, ServerObject } from "@/lib/object-types";
 import { inviteMember } from "@/lib/actions/server.actions";
 
 interface InviteCodePageProps {

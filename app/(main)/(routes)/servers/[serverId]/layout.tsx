@@ -5,7 +5,7 @@ import { getProfile } from "@/lib/actions/profile.actions";
 import { getCurrentServer } from "@/lib/actions/server.actions";
 
 import { ServerSidebar } from "@/components/server/server-sidebar";
-import { ProfileObject, ServerObject } from "@/lib/object-interface";
+import { ProfileObject, ServerObject } from "@/lib/object-types";
 
 const ServerIdLayout = async ({
   children,

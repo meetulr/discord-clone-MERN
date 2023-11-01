@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { getProfile } from "@/lib/actions/profile.actions";
 import { upDateInviteCode } from "@/lib/actions/server.actions";
 
-import { ProfileObject, ServerObject } from "@/lib/object-interface";
+import { ProfileObject, ServerObject } from "@/lib/object-types";
 
 export async function PATCH(
   req: Request,

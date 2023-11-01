@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 
 import { getProfile } from "@/lib/actions/profile.actions";
 import { createServer } from "@/lib/actions/server.actions";
-import { ProfileObject, ServerObject } from "@/lib/object-interface";
+import { ProfileObject, ServerObject } from "@/lib/object-types";
 
 export async function POST(req: Request) {
   try {

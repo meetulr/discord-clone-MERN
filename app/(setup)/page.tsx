@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 
 import { initialProfile } from "@/lib/initial-profile";
 import { getServer } from "@/lib/actions/server.actions";
-import { ProfileObject } from "@/lib/object-interface";
+import { ProfileObject } from "@/lib/object-types";
 
 import { InitialModal } from "@/components/modals/initial-modal";
 

@@ -9,7 +9,7 @@ import { getServers } from "@/lib/actions/server.actions";
 
 import { NavigationAction } from "@/components/navigation/navigation-action";
 import { NavigationItem } from "@/components/navigation/navigation-item";
-import { ProfileObject, ServerObject } from "@/lib/object-interface";
+import { ProfileObject, ServerObject } from "@/lib/object-types";
 
 const NavigationSidebar = async () => {
   const profile: ProfileObject | null = await getProfile();
