@@ -378,3 +378,33 @@ export const leaveServer = async ({
     console.log("couldn't leave the server", error);
   }
 }
+
+interface DeleteServerProps {
+  profileId: string;
+  serverId: string;
+}
+
+export const deleteServer = async ({
+  profileId,
+  serverId
+}: DeleteServerProps) => {
+  try {
+    connectToDB();
+
+    const server = await Server.findOne({ _id: serverId, profileId: profileId });
+
+    if (!server) {
+      throw new Error('Server not found');
+    }
+
+    await Server.deleteOne({ _id: serverId, profileId });
+
+    await Member.deleteMany({ serverId });
+
+    await Channel.deleteMany({ serverId });
+
+    return server.toObject({ transform: transformFunction });
+  } catch (error) {
+    console.log("couldn't delete the server", error);
+  }
+}
