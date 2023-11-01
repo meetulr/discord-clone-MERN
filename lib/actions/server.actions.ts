@@ -7,7 +7,6 @@ import Channel from "@/lib/models/channel.model";
 import { MemberRole } from "@/lib/models/member.model";
 
 import { transformFunction } from "../mongoose.utils";
-import { ServerObject } from "../object-interface";
 
 export const getServer = async (profileId: string) => {
   try {
@@ -145,7 +144,7 @@ export const upDateInviteCode = async ({
   try {
     connectToDB();
 
-    const server: ServerObject | null = await Server.findOneAndUpdate(
+    const server = await Server.findOneAndUpdate(
       { _id: serverId, profileId },
       { inviteCode: uuidv4() },
       { new: true }

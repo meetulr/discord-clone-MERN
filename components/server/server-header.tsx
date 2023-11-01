@@ -1,7 +1,6 @@
 "use client"
 
 import { ServerObject } from "@/lib/object-interface"
-import { MemberRole } from "@/lib/models/member.model";
 
 import {
   DropdownMenu,
@@ -36,8 +35,8 @@ export const ServerHeader = ({
 
   const { type, data, onOpen } = useModal();
 
-  const isAdmin = role === MemberRole.ADMIN;
-  const isModerator = isAdmin || role === MemberRole.MODERATOR;
+  const isAdmin = role === "ADMIN";
+  const isModerator = isAdmin || role === "MODERATOR";
 
   if(type === "invite" && data.server && server.inviteCode !== data.server.inviteCode){
     server.inviteCode = data.server.inviteCode;
