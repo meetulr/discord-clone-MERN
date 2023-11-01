@@ -2,7 +2,7 @@ import { ServerObject } from "@/lib/object-types";
 import { create } from "zustand";
 
 export type ModalType = "createServer" | "invite" | "editServer"
-  | "members" | "createChannel";
+  | "members" | "createChannel" | "leaveServer"; 
 
 interface ModalData {
   server?: ServerObject;

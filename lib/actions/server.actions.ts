@@ -344,3 +344,37 @@ export const createChannel = async ({
     console.log("counldn't create the channel", error);
   }
 }
+
+interface LeaveServerProps {
+  profileId: string;
+  serverId: string;
+}
+
+export const leaveServer = async ({
+  profileId,
+  serverId
+}: LeaveServerProps) => {
+  try {
+    connectToDB();
+
+    const server = await Server.findOne({ _id: serverId })
+      .populate("members");
+
+    const member = server.members.some((member: any) => member.profileId.toString() === profileId);
+
+    if (member && server.profileId.toString() !== profileId) {
+      server.members = server.members.filter((member: any) => member.profileId.toString() !== profileId);
+
+      await Member.deleteOne({ profileId: profileId, serverId: serverId });
+
+      await server.save();
+
+      return server.toObject({ transform: transformFunction });
+    }
+    else {
+      throw new Error("Admins can't leave the server");
+    }
+  } catch (error) {
+    console.log("couldn't leave the server", error);
+  }
+}
