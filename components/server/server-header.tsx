@@ -31,13 +31,17 @@ interface ServerHeaderProps {
 export const ServerHeader = ({
   server,
   role
-} : ServerHeaderProps
+}: ServerHeaderProps
 ) => {
 
-  const { onOpen } = useModal();
+  const { type, data, onOpen } = useModal();
 
   const isAdmin = role === MemberRole.ADMIN;
   const isModerator = isAdmin || role === MemberRole.MODERATOR;
+
+  if(type === "invite" && data.server && server.inviteCode !== data.server.inviteCode){
+    server.inviteCode = data.server.inviteCode;
+  }
 
   return (
     <DropdownMenu>

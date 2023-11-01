@@ -217,7 +217,7 @@ export const updateServer = async ({
       { new: true }
     );
 
-    return server;
+    return server.toObject({ transform: transformFunction });
   } catch (error) {
     console.log("couldn't update the server", error);
   }
