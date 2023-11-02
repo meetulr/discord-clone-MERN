@@ -1,4 +1,4 @@
-import { ServerObject } from "@/lib/object-types";
+import { ChannelObject, ServerObject } from "@/lib/object-types";
 import { create } from "zustand";
 
 export type ModalType = "createServer" | "invite" | "editServer"
@@ -7,6 +7,7 @@ export type ModalType = "createServer" | "invite" | "editServer"
 
 interface ModalData {
   server?: ServerObject;
+  channel?: ChannelObject;
   channelType?: "TEXT" | "AUDIO" | "VIDEO";
 }
 
