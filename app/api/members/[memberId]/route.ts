@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { getProfile } from "@/lib/actions/profile.actions";
-import { kickMember, updateMemberRole } from "@/lib/actions/server.actions";
+import { kickMember, updateMemberRole } from "@/lib/actions/member.actions";
 import { ProfileObject, ServerObject } from "@/lib/object-types";
 
 export async function PATCH(

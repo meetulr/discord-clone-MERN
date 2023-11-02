@@ -1,5 +1,5 @@
 import { getProfile } from "@/lib/actions/profile.actions";
-import { createChannel } from "@/lib/actions/server.actions";
+import { createChannel } from "@/lib/actions/channel.actions";
 import { ChannelObject } from "@/lib/object-types";
 import { NextResponse } from "next/server";
 
