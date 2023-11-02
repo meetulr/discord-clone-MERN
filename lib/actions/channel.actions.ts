@@ -3,6 +3,41 @@ import Server from "@/lib/models/server.model";
 import Channel from "@/lib/models/channel.model";
 import { transformFunction } from "@/lib/mongoose.utils";
 
+interface GetGeneralChannelProps {
+  profileId: string;
+  serverId: string;
+}
+
+export const getGeneralChannel = async ({
+  profileId,
+  serverId
+}: GetGeneralChannelProps) => {
+  try {
+    connectToDB();
+
+    const server = await Server.findById(serverId)
+      .populate("members")
+      .populate("channels");
+
+    const member = server.members.find((member: any) => member.profileId.toString() === profileId);
+
+    if (member) {
+      const generalChannel = server.channels.find((channel: any) => channel.name === 'general');
+
+      if (generalChannel) {
+        return generalChannel.toObject({ transform: transformFunction });
+      } else {
+        console.log('General channel not found');
+      }
+    }
+    else {
+      console.log("Member dosen't belong to the server");
+    }
+  } catch (error) {
+    console.log("couldn't get the general channel");
+  }
+}
+
 interface CreateChannelProps {
   profileId: string;
   serverId: string;
