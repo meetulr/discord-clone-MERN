@@ -13,7 +13,10 @@ import { getCurrentServer } from "@/lib/actions/server.actions";
 import { ChannelObject, MemberObject, ProfileObject, ServerObject } from "@/lib/object-types";
 
 import { ServerHeader } from "@/components/server/server-header";
-import ServerSearch from "@/components/server/server-search";
+import { ServerSearch } from "@/components/server/server-search";
+import { ServerSection } from "@/components/server/server-section";
+import { ServerChannel } from "@/components/server/server-channel";
+import { ServerMember } from "@/components/server/server-member";
 
 const iconMap = {
   [ChannelType.TEXT]: <Hash className="mr-2 h-4 w-4" />,
@@ -41,7 +44,7 @@ export const ServerSidebar = async ({
     return redirect("/");
   }
 
-  let server: ServerObject | null = await getCurrentServer(serverId, profile._id);
+  const server: ServerObject | null = await getCurrentServer(serverId, profile._id);
 
   if (!server) {
     return redirect("/");
@@ -105,7 +108,7 @@ export const ServerSidebar = async ({
           />
         </div>
         <Separator className="bg-zinc-200 dark:bg-zinc-700 rounded-md my-2" />
-        {/* {!!textChannels?.length && (
+        {!!textChannels?.length && (
           <div className="mb-2">
             <ServerSection
               sectionType="channels"
@@ -116,7 +119,7 @@ export const ServerSidebar = async ({
             <div className="space-y-[2px]">
               {textChannels.map((channel) => (
                 <ServerChannel
-                  key={channel.id}
+                  key={channel._id}
                   channel={channel}
                   role={role}
                   server={server}
@@ -136,7 +139,7 @@ export const ServerSidebar = async ({
             <div className="space-y-[2px]">
               {audioChannels.map((channel) => (
                 <ServerChannel
-                  key={channel.id}
+                  key={channel._id}
                   channel={channel}
                   role={role}
                   server={server}
@@ -156,7 +159,7 @@ export const ServerSidebar = async ({
             <div className="space-y-[2px]">
               {videoChannels.map((channel) => (
                 <ServerChannel
-                  key={channel.id}
+                  key={channel._id}
                   channel={channel}
                   role={role}
                   server={server}
@@ -176,14 +179,14 @@ export const ServerSidebar = async ({
             <div className="space-y-[2px]">
               {members.map((member) => (
                 <ServerMember
-                  key={member.id}
+                  key={member._id}
                   member={member}
                   server={server}
                 />
               ))}
             </div>
           </div>
-        )} */}
+        )}
       </ScrollArea>
     </div>
   );

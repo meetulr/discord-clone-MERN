@@ -25,7 +25,7 @@ interface ServerSearchProps {
   }[]
 }
 
-const ServerSearch = ({
+export const ServerSearch = ({
   data
 }: ServerSearchProps) => {
 
@@ -101,5 +101,3 @@ const ServerSearch = ({
     </CommandDialog>
   </>;
 }
-
-export default ServerSearch;
