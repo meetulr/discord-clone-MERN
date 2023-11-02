@@ -15,7 +15,8 @@ export const getMember = async ({
   try {
     connectToDB();
 
-    const member = await Member.findOne({ serverId: serverId, profileId: profileId });
+    const member = await Member.findOne({ serverId: serverId, profileId: profileId })
+      .populate("profileId");
 
     return member.toObject({ transform: transformFunction });
   } catch (error) {
