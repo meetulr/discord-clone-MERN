@@ -3,6 +3,22 @@ import Server from "@/lib/models/server.model";
 import Channel from "@/lib/models/channel.model";
 import { transformFunction } from "@/lib/mongoose.utils";
 
+interface GetChannelProps {
+  channelId: string
+}
+
+export const getChannel = async ({
+  channelId
+}: GetChannelProps) => {
+  try {
+    const channel = await Channel.findById(channelId);
+
+    return channel.toObject({ transform: transformFunction });
+  } catch (error) {
+    console.log("couldn't find the channel", error);
+  }
+}
+
 interface GetGeneralChannelProps {
   profileId: string;
   serverId: string;

@@ -11,7 +11,7 @@ import { NavigationAction } from "@/components/navigation/navigation-action";
 import { NavigationItem } from "@/components/navigation/navigation-item";
 import { ProfileObject, ServerObject } from "@/lib/object-types";
 
-const NavigationSidebar = async () => {
+export const NavigationSidebar = async () => {
   const profile: ProfileObject | null = await getProfile();
 
   if (!profile) {
@@ -51,5 +51,3 @@ const NavigationSidebar = async () => {
     </div>
   );
 };
-
-export default NavigationSidebar;

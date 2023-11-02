@@ -3,6 +3,26 @@ import Member from "@/lib/models/member.model";
 import Server from "@/lib/models/server.model";
 import { transformFunction } from "@/lib/mongoose.utils";
 
+interface GetMemberProps {
+  profileId: string;
+  serverId: string;
+}
+
+export const getMember = async ({
+  profileId,
+  serverId
+}: GetMemberProps) => {
+  try {
+    connectToDB();
+
+    const member = await Member.findOne({ serverId: serverId, profileId: profileId });
+
+    return member.toObject({ transform: transformFunction });
+  } catch (error) {
+    console.log("couldn't find the member", error);
+  }
+}
+
 interface InviteMemberProps {
   inviteCode: string;
   profileId: string;
