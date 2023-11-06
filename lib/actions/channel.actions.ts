@@ -13,6 +13,10 @@ export const getChannel = async ({
   try {
     const channel = await Channel.findById(channelId);
 
+    if(!channel){
+      return null;
+    }
+
     return channel.toObject({ transform: transformFunction });
   } catch (error) {
     console.log("couldn't find the channel", error);

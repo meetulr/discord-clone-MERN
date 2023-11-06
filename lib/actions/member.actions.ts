@@ -18,6 +18,10 @@ export const getMember = async ({
     const member = await Member.findOne({ serverId: serverId, profileId: profileId })
       .populate("profileId");
 
+      if(!member){
+        return null;
+      }
+
     return member.toObject({ transform: transformFunction });
   } catch (error) {
     console.log("couldn't find the member", error);
