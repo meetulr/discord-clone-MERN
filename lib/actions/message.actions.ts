@@ -37,3 +37,50 @@ export const createMessage = async ({
     console.log("couldn't create the message", error);
   }
 }
+
+interface GetMessagesProps {
+  cursor: string | null;
+  channelId: string;
+  messagesBatch: number
+}
+
+export const getMessages = async ({
+  cursor,
+  channelId,
+  messagesBatch
+}: GetMessagesProps) => {
+  try {
+    connectToDB();
+
+    let messages = [];
+
+    if (cursor) {
+      messages = await Message.find({
+        _id: { $lt: cursor },
+        channelId
+      })
+        .populate({
+          path: 'memberId',
+          populate: { path: 'profileId' }
+        })
+        .sort({ createdAt: -1 })
+        .limit(messagesBatch)
+    } else {
+      messages = await Message.find({
+        channelId
+      })
+        .populate({
+          path: 'memberId',
+          populate: { path: 'profileId' }
+        })
+        .sort({ createdAt: -1 })
+        .limit(messagesBatch)
+    }
+    
+    const currMessages = messages.map((message) => message.toObject({transform: transformFunction}));
+    
+    return currMessages;
+  } catch (error) {
+
+  }
+}

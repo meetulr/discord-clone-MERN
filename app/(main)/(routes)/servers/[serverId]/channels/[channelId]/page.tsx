@@ -8,6 +8,7 @@ import { ChannelType } from "@/lib/models/channel.model";
 import { ChannelObject, MemberObject, ProfileObject } from "@/lib/object-types";
 import { ChatHeader } from "@/components/chat/chat-header";
 import { ChatInput } from "@/components/chat/chat-input";
+import { ChatMessages } from "@/components/chat/chat-messages";
 
 interface ChannelIdPageProps {
   params: {
@@ -47,15 +48,28 @@ const ChannelIdPage = async ({
         type="channel"
       />
 
-      <div className="flex-1">Future Messages</div>
-      <ChatInput 
-      name={channel.name}
-      type="channel"
-      apiUrl="/api/socket/messages"
-      query={{
-        channelId: channel._id,
-        serverId: channel.serverId
-      }}
+      <ChatMessages
+        member={member}
+        name={channel.name}
+        chatId={channel._id}
+        type="channel"
+        apiUrl="/api/messages"
+        socketUrl="/api/socket/messages"
+        socketQuery={{
+          channelId: channel._id,
+          serverId: channel.serverId as string,
+        }}
+        paramKey="channelId"
+        paramValue={channel._id}
+      />
+      <ChatInput
+        name={channel.name}
+        type="channel"
+        apiUrl="/api/socket/messages"
+        query={{
+          channelId: channel._id,
+          serverId: channel.serverId
+        }}
       />
     </div>
   );
