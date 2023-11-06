@@ -25,14 +25,14 @@ export const createMessage = async ({
       memberId,
     });
 
-    const savedMessage = await message.save();
+    await message.save();
 
-    await savedMessage.populate({
+    await message.populate({
       path: 'memberId',
       populate: { path: 'profileId' }
     });
 
-    return savedMessage.toObject({ transform: transformFunction });
+    return message.toObject({ transform: transformFunction });
   } catch (error) {
     console.log("couldn't create the message", error);
   }

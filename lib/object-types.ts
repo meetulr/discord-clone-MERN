@@ -46,3 +46,14 @@ export type ChannelObject = {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export type MessageObject = {
+  _id: string;
+  content: string;
+  fileUrl: string;
+  memberId: string | MemberObject;
+  channelId: string | ChannelObject;
+  deleted: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}

@@ -1,10 +1,13 @@
 import { NextApiRequest } from "next";
+
 import { NextApiResponseServerIo } from "@/lib/types";
+
 import { getPagesProfile } from "@/lib/actions/profile.actions";
-import { ChannelObject, ProfileObject, ServerObject } from "@/lib/object-types";
 import { getCurrentServer } from "@/lib/actions/server.actions";
 import { getChannel } from "@/lib/actions/channel.actions";
 import { createMessage } from "@/lib/actions/message.actions";
+
+import { ChannelObject, MessageObject, ProfileObject, ServerObject } from "@/lib/object-types";
 
 export default async function handler(
   req: NextApiRequest,
@@ -54,7 +57,7 @@ export default async function handler(
       return res.status(404).json({ message: "Member not found" });
     }
 
-    const message = await createMessage({
+    const message: MessageObject = await createMessage({
       content,
       fileUrl,
       channelId: channelId as string,
