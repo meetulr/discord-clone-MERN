@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Plus, Smile } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useModal } from "@/hooks/use-modal-store";
 
 import {
   Form,
@@ -15,9 +16,7 @@ import {
   FormItem,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useModal } from "@/hooks/use-modal-store";
-import { ApiError } from "next/dist/server/api-utils";
-// import { EmojiPicker } from "@/components/emoji-picker";
+import { EmojiPicker } from "@/components/emoji-picker";
 
 const formSchema = z.object({
   content: z.string().min(1),
@@ -89,10 +88,9 @@ export const ChatInput = ({
                     {...field}
                   />
                   <div className="absolute top-7 right-8">
-                    {/* <EmojiPicker
-                      onChange={(emoji: string) => field.onChange(`${field.value} ${emoji}`)}
-                    /> */}
-                    <Smile />
+                    <EmojiPicker
+                      onChange={(emoji: string) => field.onChange(`${field.value}${emoji}`)}
+                    />
                   </div>
                 </div>
               </FormControl>
