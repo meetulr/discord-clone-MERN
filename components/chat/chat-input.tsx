@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useModal } from "@/hooks/use-modal-store";
+import { ApiError } from "next/dist/server/api-utils";
 // import { EmojiPicker } from "@/components/emoji-picker";
 
 const formSchema = z.object({
@@ -56,8 +57,8 @@ export const ChatInput = ({
 
       await axios.post(url, values);
 
-      // form.reset();
-      // router.refresh();
+      form.reset();
+      router.refresh();
     } catch (error) {
       console.log(error);
     }

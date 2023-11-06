@@ -1,4 +1,6 @@
+import { NextApiRequest } from "next";
 import { auth } from "@clerk/nextjs";
+import { getAuth } from "@clerk/nextjs/server";
 
 import { connectToDB } from "@/lib/db";
 
@@ -11,6 +13,28 @@ export const getProfile = async () => {
     connectToDB();
 
     const { userId } = auth();
+
+    if (!userId) {
+      return null;
+    }
+
+    const profile = await Profile.findOne({ userId });
+
+    if(!profile){
+      return null;
+    }
+
+    return profile.toObject({ transform: transformFunction });
+  } catch (error: any) {
+    console.log("failed to get profile", error.message);
+  }
+}
+
+export const getPagesProfile = async (req: NextApiRequest) => {
+  try {
+    connectToDB();
+
+    const { userId } = getAuth(req);
 
     if (!userId) {
       return null;
