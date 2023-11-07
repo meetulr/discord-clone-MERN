@@ -4,7 +4,7 @@ import { getProfile } from "@/lib/actions/profile.actions";
 import { MessageObject } from "@/lib/object-types";
 import { getMessages } from "@/lib/actions/message.actions";
 
-const MESSAGES_BATCH = 5;
+const MESSAGES_BATCH = 10;
 
 export async function GET(
   req: Request
