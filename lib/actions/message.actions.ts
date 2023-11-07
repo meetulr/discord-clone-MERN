@@ -76,11 +76,15 @@ export const getMessages = async ({
         .sort({ createdAt: -1 })
         .limit(messagesBatch)
     }
-    
-    const currMessages = messages.map((message) => message.toObject({transform: transformFunction}));
-    
-    return currMessages;
-  } catch (error) {
 
+    if (!messages) {
+      return [];
+    }
+
+    messages = messages.map((message) => message.toObject({ transform: transformFunction }));
+
+    return messages;
+  } catch (error) {
+    console.log("couldn't get messages", error);
   }
 }
