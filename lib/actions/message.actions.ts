@@ -88,3 +88,68 @@ export const getMessages = async ({
     console.log("couldn't get messages", error);
   }
 }
+
+interface GetMessageProps {
+  messageId: string;
+  channelId: string;
+}
+
+export const getMessage = async ({
+  messageId,
+  channelId
+}: GetMessageProps) => {
+  try {
+    connectToDB();
+
+    const message = await Message.findOne({ _id: messageId, channelId })
+      .populate({
+        path: 'memberId',
+        populate: { path: 'profileId' }
+      });
+
+    if (!message) {
+      return null;
+    }
+
+    return message.toObject({ transform: transformFunction });
+  } catch (error) {
+    console.log("coundn't get the messagge", error);
+  }
+}
+
+interface UpdateMessageProps {
+  messageId: string
+  deleteMsg?: boolean;
+  updateMsg?: boolean;
+  content?: string;
+}
+
+export const updateMessage = async ({
+  messageId,
+  deleteMsg,
+  updateMsg,
+  content
+}: UpdateMessageProps) => {
+  try {
+    connectToDB();
+
+    let message;
+
+    if (deleteMsg) {
+      message = await Message.findOneAndUpdate(
+        { _id: messageId },
+        { content: "This message has been deleted", fileUrl: null, deleted: true }
+      );
+    }
+    else if (updateMsg) {
+      message = await Message.findOneAndUpdate(
+        { _id: messageId },
+        { content }
+      )
+    }
+
+    return message.toObject({ transform: transformFunction });
+  } catch (error) {
+    console.log("couldn't update the message", error);
+  }
+}
