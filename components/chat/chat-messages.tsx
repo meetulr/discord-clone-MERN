@@ -9,6 +9,7 @@ import { ChatItem } from "@/components/chat/chat-item";
 
 import { MemberObject, MessageObject } from "@/lib/object-types";
 import { Fragment } from "react";
+import { useChatSocket } from "@/hooks/use-chat-socket";
 
 const DATE_FORMAT = "d MMM yyyy, HH:mm";
 
@@ -37,6 +38,8 @@ export const ChatMessages = ({
 }: ChatMessagesProps) => {
 
   const queryKey = `chat:${chatId}`;
+  const addKey = `chat:${chatId}:messages`;
+  const updateKey = `chat:${chatId}:messages:update`
 
   const {
     data,
@@ -50,6 +53,8 @@ export const ChatMessages = ({
     paramKey,
     paramValue,
   });
+
+  useChatSocket({ queryKey, addKey, updateKey });
 
   if (status === "pending") {
     return (
@@ -72,8 +77,6 @@ export const ChatMessages = ({
       </div>
     )
   }
-
-  console.log(data);
 
   return (
     <div className="flex-1 flex flex-col py-4 overflow-y-auto">

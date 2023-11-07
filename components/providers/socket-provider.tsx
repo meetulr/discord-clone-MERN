@@ -37,10 +37,12 @@ export const SocketProvider = ({
     });
 
     socketInstance.on("connect", () => {
+      console.log("socket connected");
       setIsConnected(true);
     });
 
     socketInstance.on("disconnect", () => {
+      console.log("socket disconnected");
       setIsConnected(false);
     });
 

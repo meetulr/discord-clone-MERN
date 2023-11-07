@@ -119,9 +119,9 @@ export const getMessage = async ({
 
 interface UpdateMessageProps {
   messageId: string
-  deleteMsg?: boolean;
-  updateMsg?: boolean;
-  content?: string;
+  deleteMsg: boolean;
+  updateMsg: boolean;
+  content: string;
 }
 
 export const updateMessage = async ({
@@ -138,15 +138,22 @@ export const updateMessage = async ({
     if (deleteMsg) {
       message = await Message.findOneAndUpdate(
         { _id: messageId },
-        { content: "This message has been deleted", fileUrl: null, deleted: true }
+        { content, fileUrl: null, deleted: true },
+        { new: true }
       );
     }
     else if (updateMsg) {
       message = await Message.findOneAndUpdate(
         { _id: messageId },
-        { content }
+        { content },
+        { new: true }
       )
     }
+
+    await message.populate({
+      path: 'memberId',
+      populate: { path: 'profileId' }
+    });
 
     return message.toObject({ transform: transformFunction });
   } catch (error) {

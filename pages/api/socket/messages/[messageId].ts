@@ -77,7 +77,9 @@ export default async function handler(
     if (req.method === "DELETE") {
       message = await updateMessage({
         messageId: messageId as string,
-        deleteMsg: true
+        content: "This message has been deleted",
+        deleteMsg: true,
+        updateMsg: false
       });
     }
 
@@ -85,11 +87,11 @@ export default async function handler(
       if (!isMessageOwner) {
         return res.status(401).json({ error: "Unauthorized" });
       }
-      console.log("here");
 
       message = await updateMessage({
         messageId: messageId as string,
         content: content as string,
+        deleteMsg: false,
         updateMsg: true
       })
     }
