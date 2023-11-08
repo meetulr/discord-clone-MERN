@@ -2,10 +2,9 @@ import { NextApiRequest } from "next";
 
 import { NextApiResponseServerIo } from "@/lib/types";
 import { getPagesProfile } from "@/lib/actions/profile.actions";
-import { getCurrentServer } from "@/lib/actions/server.actions";
-import { getChannel } from "@/lib/actions/channel.actions";
-import { ChannelObject, MemberObject, MessageObject, ProfileObject, ServerObject } from "@/lib/object-types";
-import { getMessage, updateMessage } from "@/lib/actions/message.actions";
+import { ConversationObject, DirectMessageObject, MemberObject, ProfileObject } from "@/lib/object-types";
+import { getConversation } from "@/lib/actions/conversation.actions";
+import { getDirectMessage, updateDirectMessage } from "@/lib/actions/direct-message.actions";
 
 export default async function handler(
   req: NextApiRequest,
@@ -17,47 +16,35 @@ export default async function handler(
 
   try {
     const profile: ProfileObject | null = await getPagesProfile(req);
-    const { messageId, serverId, channelId } = req.query;
+    const { directMessageId, conversationId } = req.query;
     const { content } = req.body;
 
     if (!profile) {
       return res.status(401).json({ error: "Unauthorized" });
     }
 
-    if (!serverId) {
-      return res.status(400).json({ error: "Server ID missing" });
+    if (!conversationId) {
+      return res.status(400).json({ error: "ConversationId ID missing" });
     }
 
-    if (!channelId) {
-      return res.status(400).json({ error: "Channel ID missing" });
+    const conversation: ConversationObject | null = await getConversation({
+      profileId: profile._id,
+      conversationId: conversationId as string
+    });
+
+    if (!conversation) {
+      return res.status(404).json({ error: "Conversation not found" });
     }
 
-    const profileId = profile._id;
-
-    const server: ServerObject | null = await getCurrentServer(
-      (serverId as string),
-      profileId
-    );
-
-    if (!server) {
-      return res.status(404).json({ error: "Server not found" });
-    }
-
-    const channel: ChannelObject | null = await getChannel({ channelId: channelId as string });
-
-    if (!channel || channel.serverId !== serverId) {
-      return res.status(404).json({ error: "Channel not found" });
-    }
-
-    const member = server.members.find((member) => typeof member !== "string" && typeof member.profileId !== "string" && member.profileId._id === profile._id);
+    const member = ((conversation.memberOneId as MemberObject).profileId as ProfileObject)._id === profile._id ? conversation.memberOneId : conversation.memberTwoId;
 
     if (!member) {
       return res.status(404).json({ error: "Member not found" });
     }
 
-    let message: MessageObject | null = await getMessage({
-      messageId: messageId as string,
-      channelId: channelId as string
+    let message: DirectMessageObject | null = await getDirectMessage({
+      directMessageId: directMessageId as string,
+      conversationId: conversationId as string
     });
 
     if (!message || message.deleted) {
@@ -74,8 +61,8 @@ export default async function handler(
     }
 
     if (req.method === "DELETE") {
-      message = await updateMessage({
-        messageId: messageId as string,
+      message = await updateDirectMessage({
+        directMessageId: directMessageId as string,
         content: "This message has been deleted",
         deleteMsg: true,
         updateMsg: false
@@ -87,15 +74,15 @@ export default async function handler(
         return res.status(401).json({ error: "Unauthorized" });
       }
 
-      message = await updateMessage({
-        messageId: messageId as string,
+      message = await updateDirectMessage({
+        directMessageId: directMessageId as string,
         content: content as string,
         deleteMsg: false,
         updateMsg: true
       })
     }
 
-    const updateKey = `chat:${channelId}:messages:update`;
+    const updateKey = `chat:${conversationId}:messages:update`;
 
     res?.socket?.server?.io?.emit(updateKey, message);
 
