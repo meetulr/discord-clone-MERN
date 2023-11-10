@@ -14,13 +14,13 @@ import DirectMessage from "@/lib/models/directMessage.model";
 export const getServer = async (profileId: string) => {
   try {
     connectToDB();
-    const member = await Member.findOne({ profileId });
+    const member = await Member.findOne({ profileId, deleted: false });
 
-    if (member.deleted) {
+    if (!member) {
       return null;
     }
 
-    return member?.serverId.toString();
+    return member.serverId.toString();
   } catch (error) {
     console.log("cannot find the server", error);
   }
@@ -254,7 +254,7 @@ export const deleteServer = async ({
   try {
     connectToDB();
 
-    const server = await Server.findOne({ _id: serverId, profileId: profileId });
+    const server = await Server.findOne({ _id: serverId, profileId  });
 
     if (!server) {
       throw new Error('Server not found');
