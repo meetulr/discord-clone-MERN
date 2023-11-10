@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { boolean, string } from "zod";
 
 export const MemberRole = Object.freeze({
   ADMIN: 'ADMIN',
@@ -20,22 +21,10 @@ const memberSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Server'
   },
-  messages: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Message'
-  }],
-  directMessages: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'DirectMessage'
-  }],
-  conversationsInitiated: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Conversation'
-  }],
-  conversationsReceived: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Conversation'
-  }]
+  deleted: {
+    type: Boolean,
+    default: false
+  }
 }, { timestamps: true });
 
 Object.assign(memberSchema.statics, { MemberRole });

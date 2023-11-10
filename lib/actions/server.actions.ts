@@ -6,12 +6,19 @@ import Member from "@/lib/models/member.model";
 import Channel from "@/lib/models/channel.model";
 import { MemberRole } from "@/lib/models/member.model";
 
-import { transformFunction } from "../mongoose.utils";
+import { transformFunction } from "@/lib/mongoose.utils";
+import Message from "@/lib/models/message.model";
+import Conversation from "@/lib/models/conversation.model";
+import DirectMessage from "@/lib/models/directMessage.model";
 
 export const getServer = async (profileId: string) => {
   try {
     connectToDB();
     const member = await Member.findOne({ profileId });
+
+    if (member.deleted) {
+      return null;
+    }
 
     return member?.serverId.toString();
   } catch (error) {
@@ -199,14 +206,31 @@ export const leaveServer = async ({
     const server = await Server.findOne({ _id: serverId })
       .populate("members");
 
-    const member = server.members.some((member: any) => member.profileId.toString() === profileId);
+    const isMember = server.members.some((member: any) => member.profileId.toString() === profileId);
 
-    if (member && server.profileId.toString() !== profileId) {
+    if (isMember && server.profileId.toString() !== profileId) {
       server.members = server.members.filter((member: any) => member.profileId.toString() !== profileId);
-
-      await Member.deleteOne({ profileId: profileId, serverId: serverId });
-
       await server.save();
+
+      const member = await Member.findOne({ profileId: profileId, serverId: serverId });
+
+      const conversations = await Conversation.find({
+        $or: [
+          { memberOneId: member._id },
+          { memberTwoId: member._id }
+        ]
+      });
+
+      const conversationIds = conversations.map(conversation => conversation._id);
+
+      await DirectMessage.deleteMany({ conversationId: { $in: conversationIds } });
+
+      await Conversation.deleteMany({ _id: { $in: conversationIds } });
+
+      await Member.updateOne(
+        { _id: member._id },
+        { deleted: true }
+      );
 
       return server.toObject({ transform: transformFunction });
     }
@@ -236,11 +260,29 @@ export const deleteServer = async ({
       throw new Error('Server not found');
     }
 
+    const members = server.members;
+    const channels = server.channels;
+
     await Server.deleteOne({ _id: serverId, profileId });
 
     await Member.deleteMany({ serverId });
 
     await Channel.deleteMany({ serverId });
+
+    await Message.deleteMany({ channelId: { $in: channels } });
+
+    const conversations = await Conversation.find({
+      $or: [
+        { memberOneId: { $in: members } },
+        { memberTwoId: { $in: members } }
+      ]
+    });
+
+    const conversationIds = conversations.map(conversation => conversation._id);
+
+    await DirectMessage.deleteMany({ conversationId: { $in: conversationIds } });
+
+    await Conversation.deleteMany({ _id: { $in: conversationIds } });
 
     return server.toObject({ transform: transformFunction });
   } catch (error) {

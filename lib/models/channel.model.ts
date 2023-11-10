@@ -21,10 +21,6 @@ const channelSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Server'
   },
-  messages: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Message'
-  }]
 }, { timestamps: true });
 
 Object.assign(channelSchema.statics, { ChannelType });

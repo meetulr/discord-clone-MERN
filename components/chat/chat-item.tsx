@@ -143,6 +143,9 @@ export const ChatItem = ({
             <span className="text-xs text-zinc-500 dark:text-zinc-400">
               {timestamp}
             </span>
+            {member.deleted && (
+              <span className="font-bold italic text-slate-400"> (ghost) </span>
+            )}
           </div>
           {isImage && (
             <a
@@ -231,10 +234,10 @@ export const ChatItem = ({
           )}
           <ActionTooltip label="Delete">
             <Trash
-              onClick={() => onOpen("deleteMessage", { 
+              onClick={() => onOpen("deleteMessage", {
                 apiUrl: `${socketUrl}/${id}`,
                 query: socketQuery,
-               })}
+              })}
               className="cursor-pointer ml-auto w-4 h-4 text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 transition"
             />
           </ActionTooltip>

@@ -2,6 +2,8 @@ import { connectToDB } from "@/lib/db";
 import Member from "@/lib/models/member.model";
 import Server from "@/lib/models/server.model";
 import { transformFunction } from "@/lib/mongoose.utils";
+import Conversation from "@/lib/models/conversation.model";
+import DirectMessage from "@/lib/models/directMessage.model";
 
 interface GetMemberProps {
   profileId: string;
@@ -15,12 +17,12 @@ export const getMember = async ({
   try {
     connectToDB();
 
-    const member = await Member.findOne({ serverId: serverId, profileId: profileId })
+    const member = await Member.findOne({ serverId, profileId, deleted: false })
       .populate("profileId");
 
-      if(!member){
-        return null;
-      }
+    if (!member) {
+      return null;
+    }
 
     return member.toObject({ transform: transformFunction });
   } catch (error) {
@@ -130,7 +132,23 @@ export const kickMember = async ({
     server.members = server.members.filter((member: any) => member._id.toString() !== memberId);
     await server.save();
 
-    await Member.deleteOne({ _id: memberId });
+    await Member.updateOne(
+      { _id: memberId },
+      { deleted: true }
+    );
+
+    const conversations = await Conversation.find({
+      $or: [
+        { memberOneId: memberId },
+        { memberTwoId: memberId }
+      ]
+    });
+
+    const conversationIds = conversations.map(conversation => conversation._id);
+
+    await DirectMessage.deleteMany({ conversationId: { $in: conversationIds } });
+
+    await Conversation.deleteMany({ _id: { $in: conversationIds } });
 
     server = await Server.findOne({ _id: serverId, profileId })
       .populate({

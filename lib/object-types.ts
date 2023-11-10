@@ -4,9 +4,7 @@ export type ProfileObject = {
   name: string;
   imageUrl: string;
   email: string;
-  servers: string[] | ServerObject[];
-  members: string[] | MemberObject[];
-  channels: string[] | ChannelObject[];
+  deleted: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -29,9 +27,7 @@ export type MemberObject = {
   profileId: string | ProfileObject;
   serverId: string | ServerObject;
   messages: string[] | MessageObject[];
-  directMessages: string[] | DirectMessageObject[];
-  conversationsInitiated: string[] | ConversationObject[];
-  conversationsReceived: string[] | ConversationObject[];
+  deleted: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -42,7 +38,6 @@ export type ChannelObject = {
   type: 'TEXT' | 'AUDIO' | 'VIDEO';
   profileId: string | ProfileObject;
   serverId: string | ServerObject;
-  messages: string[] | MessageObject[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -62,7 +57,6 @@ export type ConversationObject = {
   _id: string;
   memberOneId: string | MemberObject;
   memberTwoId: string | MemberObject;
-  directMessages: string[] | DirectMessageObject[];
   createdAt: Date;
   updatedAt: Date;
 }

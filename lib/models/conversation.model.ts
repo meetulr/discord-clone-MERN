@@ -9,10 +9,6 @@ const conversationSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Member',
   },
-  directMessages: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'DirectMessage'
-  }],
 }, {
   timestamps: true,
 });

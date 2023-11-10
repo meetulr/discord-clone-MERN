@@ -2,6 +2,7 @@ import { connectToDB } from "@/lib/db";
 import Server from "@/lib/models/server.model";
 import Channel from "@/lib/models/channel.model";
 import { transformFunction } from "@/lib/mongoose.utils";
+import Message from "@/lib/models/message.model";
 
 interface GetChannelProps {
   channelId: string
@@ -13,7 +14,7 @@ export const getChannel = async ({
   try {
     const channel = await Channel.findById(channelId);
 
-    if(!channel){
+    if (!channel) {
       return null;
     }
 
@@ -168,6 +169,8 @@ export const deleteChannel = async ({
 
       if (channel.name !== 'general') {
         await Channel.deleteOne({ _id: channelId });
+
+        await Message.deleteMany({ channelId });
 
         server.channels = server.channels.filter((channel: any) => channel._id.toString() !== channelId);
 

@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { boolean } from "zod";
 
 const profileSchema = new mongoose.Schema({
   userId: {
@@ -8,18 +9,10 @@ const profileSchema = new mongoose.Schema({
   name: String,
   imageUrl: String,
   email: String,
-  servers: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Server'
-  }],
-  members: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Member'
-  }],
-  channels: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Channel'
-  }]
+  deleted: {
+    type: Boolean,
+    default: false
+  }
 }, { timestamps: true });
 
 const Profile = mongoose.models?.Profile || mongoose.model("Profile", profileSchema);
