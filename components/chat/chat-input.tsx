@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { EmojiPicker } from "@/components/emoji-picker";
+import { ChatAudio } from "./chat-audio";
 
 const formSchema = z.object({
   content: z.string().min(1),
@@ -87,7 +88,11 @@ export const ChatInput = ({
                     placeholder={`Message ${type === "conversation" ? name : "#" + name}`}
                     {...field}
                   />
-                  <div className="absolute top-7 right-8">
+                  <div className="flex absolute top-7 right-8 space-x-2">
+                    <ChatAudio
+                      apiUrl={apiUrl}
+                      query={query}
+                    />
                     <EmojiPicker
                       onChange={(emoji: string) => field.onChange(`${field.value}${emoji}`)}
                     />

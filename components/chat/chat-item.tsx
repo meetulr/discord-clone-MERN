@@ -122,7 +122,8 @@ export const ChatItem = ({
   const canDeleteMessage = !deleted && (isAdmin || isModerator || isOwner);
   const canEditMessage = !deleted && isOwner && !fileUrl;
   const isPDF = fileType === "pdf" && fileUrl;
-  const isImage = !isPDF && fileUrl;
+  const isAudio = fileType === "mp3" && !isPDF && fileUrl;
+  const isImage = !isPDF && !isAudio && fileUrl;
 
   return (
     <div className="relative group flex items-center hover:bg-black/5 p-4 transition w-full">
@@ -162,6 +163,7 @@ export const ChatItem = ({
               />
             </a>
           )}
+
           {isPDF && (
             <div className="relative flex items-center p-2 mt-2 rounded-md bg-background/10">
               <FileIcon className="h-10 w-10 fill-indigo-200 stroke-indigo-400" />
@@ -170,9 +172,15 @@ export const ChatItem = ({
                 target="_blank"
                 rel="noopener noreferrer"
                 className="ml-2 text-sm text-indigo-500 dark:text-indigo-400 hover:underline"
-              >
+                >
                 PDF File
               </a>
+            </div>
+          )}
+
+          {isAudio && (
+            <div className="relative flex items-center p-2 mt-2 rounded-md bg-background/10">
+              <audio src={fileUrl} controls className='h-6' />
             </div>
           )}
           {!fileUrl && !isEditing && (
