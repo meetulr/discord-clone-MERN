@@ -4,7 +4,6 @@ export type ProfileObject = {
   name: string;
   imageUrl: string;
   email: string;
-  deleted: boolean;
   createdAt: Date;
   updatedAt: Date;
 }

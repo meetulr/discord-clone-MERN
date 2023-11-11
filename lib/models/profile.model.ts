@@ -9,10 +9,6 @@ const profileSchema = new mongoose.Schema({
   name: String,
   imageUrl: String,
   email: String,
-  deleted: {
-    type: Boolean,
-    default: false
-  }
 }, { timestamps: true });
 
 const Profile = mongoose.models?.Profile || mongoose.model("Profile", profileSchema);
