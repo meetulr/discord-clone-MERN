@@ -91,8 +91,6 @@ export const MembersModal = () => {
 
       const response = await axios.patch(url, { role });
 
-      console.log(response.data);
-
       router.refresh();
       onOpen("members", { server: response.data });
     } catch (error) {
