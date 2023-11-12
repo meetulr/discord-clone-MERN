@@ -106,7 +106,7 @@ export const ChatAudio = ({
         }
         {audioURL &&
           <div className='flex items-center space-x-1'>
-            <audio src={audioURL} controls className='h-6' />
+            <audio src={audioURL} controls className='h-6 w-12' />
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -150,11 +150,11 @@ export const ChatAudio = ({
         }
       </div>
 
-      <button onClick={startRecording} className={recording ? 'hidden' : 'absolute right-8'}>
+      <button type="button" onClick={startRecording} className={recording ? 'hidden' : 'absolute right-8'}>
         <Mic color="#c7bdbd" />
       </button>
 
-      <button onClick={stopRecording} className={!recording ? 'hidden' : 'animate-pulse absolute right-8'}>
+      <button type="button" onClick={stopRecording} className={!recording ? 'hidden' : 'animate-pulse absolute right-8'}>
         <MicOff color="#db3366" />
       </button>
     </div >
