@@ -75,14 +75,18 @@ export const createProfile = async ({
   try {
     connectToDB();
 
-    const profile = new Profile({
-      userId,
-      name: `${firstName} ${lastName}`,
-      imageUrl,
-      email
-    });
+    let profile = await getProfile();
 
-    await profile.save();
+    if (!profile) {
+      profile = new Profile({
+        userId,
+        name: `${firstName} ${lastName}`,
+        imageUrl,
+        email
+      });
+
+      await profile.save();
+    }
 
     return profile.toObject({ transform: transformFunction });
   } catch (error: any) {

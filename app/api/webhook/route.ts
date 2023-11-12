@@ -4,7 +4,7 @@ import { WebhookEvent } from '@clerk/nextjs/server'
 
 import { connectToDB } from '@/lib/db'
 import Profile from '@/lib/models/profile.model'
-import { deleteProfile } from '@/lib/actions/profile.actions'
+import { createProfile, deleteProfile } from '@/lib/actions/profile.actions'
 
 export async function POST(req: Request) {
   const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET
@@ -49,11 +49,48 @@ export async function POST(req: Request) {
     })
   }
 
+  if (evt.type === "user.created") {
+    try {
+      connectToDB();
+
+      const {
+        id: userId,
+        image_url: imageUrl,
+        first_name: firstName,
+        last_name: lastName,
+        email_addresses
+      } = evt.data;
+
+      await createProfile({
+        userId,
+        firstName,
+        lastName,
+        imageUrl,
+        email: email_addresses[0].email_address
+      })
+
+      return new Response("profile created", { status: 200 });
+    } catch (error) {
+      return new Response(
+        "Internal Server Error",
+        { status: 500 }
+      );
+    }
+  }
+
   if (evt.type === "user.updated") {
     try {
       connectToDB();
 
-      await Profile.updateOne({ userId: evt.data.id }, { imageUrl: evt.data.image_url });
+      const {
+        id: userId,
+        image_url: imageUrl
+      } = evt.data;
+
+      await Profile.updateOne(
+        { userId },
+        { imageUrl }
+      );
 
       return new Response("update done", { status: 200 });
     } catch (error) {
@@ -68,9 +105,11 @@ export async function POST(req: Request) {
     try {
       connectToDB();
 
-      const profile = await deleteProfile(evt.data.id as string);
+      const { id: userId } = evt.data;
 
-      return new Response("deleted the profile successfully", {status: 200});
+      await deleteProfile(userId as string);
+
+      return new Response("deleted the profile successfully", { status: 200 });
     } catch (error) {
       return new Response(
         "Internal Server Error",
