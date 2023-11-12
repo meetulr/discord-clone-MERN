@@ -122,7 +122,7 @@ export const ChatItem = ({
   const canDeleteMessage = !deleted && (isAdmin || isModerator || isOwner);
   const canEditMessage = !deleted && isOwner && !fileUrl;
   const isPDF = fileType === "pdf" && fileUrl;
-  const isAudio = fileType === "mp3" && !isPDF && fileUrl;
+  const isAudio = fileType === "mp3" && fileUrl;
   const isImage = !isPDF && !isAudio && fileUrl;
 
   return (

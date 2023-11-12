@@ -1,9 +1,10 @@
-import axios from "axios";
 import qs from "query-string";
+import axios from "axios";
 import { useState, useRef } from 'react';
 
-import { Loader2, Mic, MicOff, Trash2, Upload } from 'lucide-react';
+import { Mic, MicOff, Trash2, Upload } from 'lucide-react';
 import { useUploadThing } from '@/lib/uploadthing';
+
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Button } from '@/components/ui/button';
 
@@ -19,7 +20,7 @@ export const ChatAudio = ({
 
   const [recording, setRecording] = useState<boolean>(false);
   const [audioURL, setAudioURL] = useState<string>('');
-  const [audioFile, setAuduiFile] = useState<File>();
+  const [audioFile, setAudioFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState<boolean>(false);
   const mediaRecorder = useRef<MediaRecorder | null>(null);
 
@@ -47,6 +48,8 @@ export const ChatAudio = ({
           audioChunks.push(event.data);
         });
 
+        setRecording(true);
+
         mediaRecorder.current.addEventListener('stop', () => {
           const audioBlob = new Blob(audioChunks, { type: 'audio/mpeg' });
 
@@ -54,10 +57,8 @@ export const ChatAudio = ({
           setAudioURL(audioUrl);
 
           const newAudioFile = new File([audioBlob], 'recordedAudio.mp3', { type: 'audio/mpeg' });
-          setAuduiFile(newAudioFile);
+          setAudioFile(newAudioFile);
         });
-
-        setRecording(true);
       });
   };
 
