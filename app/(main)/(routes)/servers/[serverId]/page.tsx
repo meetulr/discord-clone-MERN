@@ -21,7 +21,7 @@ const ServerIdPage = async ({
     return redirectToSignIn();
   }
 
-  const channel: ChannelObject = await getGeneralChannel({
+  const channel: ChannelObject | null = await getGeneralChannel({
     profileId: profile._id,
     serverId: params.serverId
   });

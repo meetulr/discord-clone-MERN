@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 
 import { getProfile } from "@/lib/actions/profile.actions";
 import { ConversationObject, MemberObject, ProfileObject } from "@/lib/object-types";
-import { getMember } from "@/lib/actions/member.actions";
+import { getConvoMember, getMember } from "@/lib/actions/member.actions";
 import { getOrCreateConversation } from "@/lib/actions/conversation.actions";
 import { ChatHeader } from "@/components/chat/chat-header";
 import { ChatMessages } from "@/components/chat/chat-messages";
@@ -40,6 +40,15 @@ const MemberPage = async ({
     return redirect("/");
   }
 
+  const convoMember: MemberObject | null = await getConvoMember({
+    memberId: params.memberId,
+    serverId: params.serverId
+  })
+
+  if (!convoMember) {
+    return redirect(`/servers/${params.serverId}`);
+  }
+
   const conversation: ConversationObject | null = await getOrCreateConversation(currentMember._id, params.memberId);
 
   if (!conversation) {
@@ -49,6 +58,10 @@ const MemberPage = async ({
   const { memberOneId, memberTwoId } = conversation;
 
   const otherMember = ((((memberOneId as MemberObject).profileId as ProfileObject))._id === profile._id ? memberTwoId : memberOneId) as MemberObject;
+
+  if (otherMember.deleted) {
+    return redirect("/");
+  }
 
   return (
     <div className="bg-white dark:bg-[#313338] flex flex-col h-full">
@@ -81,6 +94,8 @@ const MemberPage = async ({
             socketQuery={{
               conversationId: conversation._id,
             }}
+            currContent={conversation}
+            profileId={profile._id}
           />
           <ChatInput
             name={(otherMember.profileId as ProfileObject).name}

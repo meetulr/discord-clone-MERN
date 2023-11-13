@@ -17,7 +17,11 @@ export const getMember = async ({
   try {
     connectToDB();
 
-    const member = await Member.findOne({ serverId, profileId, deleted: false })
+    const member = await Member.findOne({
+      serverId,
+      profileId,
+      deleted: false
+    })
       .populate("profileId");
 
     if (!member) {
@@ -27,6 +31,34 @@ export const getMember = async ({
     return member.toObject({ transform: transformFunction });
   } catch (error) {
     console.log("couldn't find the member", error);
+  }
+}
+
+interface GetConvoMember {
+  serverId: string,
+  memberId: string
+}
+
+export const getConvoMember = async ({
+  serverId,
+  memberId
+}: GetConvoMember) => {
+  try {
+    connectToDB();
+
+    const convoMember = await Member.findOne({
+      _id: memberId,
+      serverId,
+      deleted: false
+    });
+
+    if (!convoMember) {
+      return null;
+    }
+
+    return convoMember.toObject({ transform: transformFunction });
+  } catch (error) {
+    console.log("couldn't find other member", error);
   }
 }
 
@@ -48,7 +80,7 @@ export const inviteMember = async ({
     const member = server.members.find((member: any) => member.profileId.toString() === profileId);
 
     if (member) {
-      return server;
+      return server.toObject({ transform: transformFunction });
     }
 
     const newMember = new Member({

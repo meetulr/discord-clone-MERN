@@ -212,7 +212,7 @@ export const leaveServer = async ({
       server.members = server.members.filter((member: any) => member.profileId.toString() !== profileId);
       await server.save();
 
-      const member = await Member.findOne({ profileId: profileId, serverId: serverId });
+      const member = await Member.findOne({ profileId, serverId, deleted: false });
 
       const conversations = await Conversation.find({
         $or: [
@@ -254,7 +254,7 @@ export const deleteServer = async ({
   try {
     connectToDB();
 
-    const server = await Server.findOne({ _id: serverId, profileId  });
+    const server = await Server.findOne({ _id: serverId, profileId });
 
     if (!server) {
       throw new Error('Server not found');

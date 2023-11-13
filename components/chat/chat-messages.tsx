@@ -1,8 +1,10 @@
 "use client"
 
 import { Loader2, ServerCrash } from "lucide-react";
-import { Fragment, useRef, ElementRef } from "react";
+import { Fragment, useRef, ElementRef, useEffect } from "react";
 import { format } from "date-fns";
+
+import { useParams, useRouter } from "next/navigation";
 
 import { ChatWelcome } from "@/components/chat/chat-welcome";
 import { ChatItem } from "@/components/chat/chat-item";
@@ -11,7 +13,8 @@ import { useChatQuery } from "@/hooks/use-chat-query";
 import { useChatSocket } from "@/hooks/use-chat-socket";
 import { useChatScroll } from "@/hooks/use-chat-scroll";
 
-import { MemberObject, MessageObject } from "@/lib/object-types";
+import { ChannelObject, ConversationObject, MemberObject, MessageObject } from "@/lib/object-types";
+import { useServerContentQuery } from "@/hooks/use-server-content-query";
 
 const DATE_FORMAT = "d MMM yyyy, HH:mm";
 
@@ -25,6 +28,7 @@ interface ChatMessagesProps {
   paramKey: "channelId" | "conversationId";
   paramValue: string;
   type: "channel" | "conversation";
+  currContent: ChannelObject | ConversationObject;
 }
 
 export const ChatMessages = ({
@@ -36,8 +40,12 @@ export const ChatMessages = ({
   socketQuery,
   paramKey,
   paramValue,
-  type
+  type,
+  currContent
 }: ChatMessagesProps) => {
+
+  const router = useRouter();
+  const params = useParams();
 
   const queryKey = `chat:${chatId}`;
   const addKey = `chat:${chatId}:messages`;
@@ -72,6 +80,33 @@ export const ChatMessages = ({
     shouldLoadMore: !isFetchingNextPage && !!hasNextPage,
     count: data?.pages?.[0]?.items?.length ?? 0,
   })
+
+  const { fetchedContent, isPending } = useServerContentQuery({
+    paramKey,
+    paramValue,
+    currContent,
+    serverId: params?.serverId as string
+  })
+
+  if (isPending) {
+    console.log("loading");
+    return (
+      <div className="flex flex-col flex-1 justify-center items-center">
+        <Loader2 className="h-7 w-7 text-zinc-500 animate-spin my-4" />
+        <p className="text-xs text-zinc-500 dark:text-zinc-400">
+          Loading messages...
+        </p>
+      </div>
+    )
+  }
+
+  const updatedAt = fetchedContent?.updatedAt;
+  const contentId = fetchedContent?._id;
+
+  useEffect(() => {
+    router.refresh();
+  }, [updatedAt, contentId])
+
 
   if (status === "pending") {
     return (

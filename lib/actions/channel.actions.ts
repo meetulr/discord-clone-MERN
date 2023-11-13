@@ -49,10 +49,12 @@ export const getGeneralChannel = async ({
         return generalChannel.toObject({ transform: transformFunction });
       } else {
         console.log('General channel not found');
+        return null;
       }
     }
     else {
       console.log("Member dosen't belong to the server");
+      return null;
     }
   } catch (error) {
     console.log("couldn't get the general channel");
