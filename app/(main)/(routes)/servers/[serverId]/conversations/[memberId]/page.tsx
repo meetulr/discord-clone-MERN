@@ -95,7 +95,6 @@ const MemberPage = async ({
               conversationId: conversation._id,
             }}
             currContent={conversation}
-            profileId={profile._id}
           />
           <ChatInput
             name={(otherMember.profileId as ProfileObject).name}

@@ -64,7 +64,6 @@ const ChannelIdPage = async ({
             paramKey="channelId"
             paramValue={channel._id}
             currContent={channel}
-            profileId={profile._id}
           />
           <ChatInput
             name={channel.name}
