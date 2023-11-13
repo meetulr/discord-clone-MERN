@@ -19,7 +19,7 @@ export const useServerQuery = ({
     queryKey: ["getCurrentServer"],
     queryFn: fetchCurrentServer,
     initialData: currServer,
-    refetchInterval: 2000
+    refetchInterval: 5000
   })
 
   return {

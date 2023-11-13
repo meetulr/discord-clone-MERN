@@ -42,16 +42,22 @@ export const ServerContents = ({
 
   const server: ServerObject = fetchedServer;
   const currServerOwnerId = currServer.profileId;
-  const currMember = server?.members.some((member): member is MemberObject => typeof member !== "string" && typeof member.profileId !== "string" && member.profileId?._id === profileId)
+
+  const currMember = server?.members?.some((member): member is MemberObject => typeof member !== "string" && typeof member.profileId !== "string" && member.profileId?._id === profileId)
   const serverId = server?._id;
+  const updatedAt = server?.updatedAt;
 
   useEffect(() => {
-    if (!serverId || !currMember) {
-      if (profileId !== currServerOwnerId) {
+    if (profileId !== currServerOwnerId) {
+      if (!serverId || !currMember) {
         router.push("/");
       }
+      else {
+        router.refresh();
+      }
     }
-  }, [serverId, currMember])
+
+  }, [serverId, currMember, updatedAt])
 
   const textChannels = server?.channels.filter((channel): channel is ChannelObject => typeof channel !== 'string' && channel.type === "TEXT")
   const audioChannels = server?.channels.filter((channel): channel is ChannelObject => typeof channel !== 'string' && channel.type === "AUDIO")
