@@ -15,7 +15,7 @@ export const useServerQuery = ({
     return res.data;
   }
 
-  const { data: fetchedServer, isPending } = useQuery({
+  const { data: fetchedServer } = useQuery({
     queryKey: ["getCurrentServer"],
     queryFn: fetchCurrentServer,
     initialData: currServer,
@@ -23,7 +23,6 @@ export const useServerQuery = ({
   })
 
   return {
-    fetchedServer,
-    isPending
+    fetchedServer
   }
 }
