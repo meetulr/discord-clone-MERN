@@ -12,9 +12,9 @@ import { ChatItem } from "@/components/chat/chat-item";
 import { useChatQuery } from "@/hooks/use-chat-query";
 import { useChatSocket } from "@/hooks/use-chat-socket";
 import { useChatScroll } from "@/hooks/use-chat-scroll";
+import { useServerContentQuery } from "@/hooks/use-server-content-query";
 
 import { ChannelObject, ConversationObject, MemberObject, MessageObject } from "@/lib/object-types";
-import { useServerContentQuery } from "@/hooks/use-server-content-query";
 
 const DATE_FORMAT = "d MMM yyyy, HH:mm";
 

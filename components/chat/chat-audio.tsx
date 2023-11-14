@@ -1,8 +1,9 @@
 import qs from "query-string";
 import axios from "axios";
-import { useState, useRef } from 'react';
 
+import { useState, useRef } from 'react';
 import { Mic, MicOff, Trash2, Upload } from 'lucide-react';
+
 import { useUploadThing } from '@/lib/uploadthing';
 
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';

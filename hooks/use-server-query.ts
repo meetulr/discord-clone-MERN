@@ -1,10 +1,10 @@
-import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
+import { useQuery } from "@tanstack/react-query"
 
 import { ServerObject } from "@/lib/object-types"
 
 interface ServerQueryProps {
-  currServer: ServerObject
+  currServer: ServerObject;
 }
 
 export const useServerQuery = ({

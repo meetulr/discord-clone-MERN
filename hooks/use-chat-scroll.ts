@@ -16,6 +16,8 @@ export const useChatScroll = ({
   count,
 }: ChatScrollProps) => {
   const [hasInitialized, setHasInitialized] = useState(false);
+  const [savedScrollHeight, setSavedScrollHeight] = useState(0);
+  const [numFetches, setNumFetches] = useState(0);
 
   useEffect(() => {
     const topDiv = chatRef?.current;
@@ -24,7 +26,11 @@ export const useChatScroll = ({
       const scrollTop = topDiv?.scrollTop;
 
       if (scrollTop === 0 && shouldLoadMore) {
+        setSavedScrollHeight(topDiv?.scrollHeight ?? 0);
+
         loadMore();
+
+        setNumFetches((prevNumFetches) => (prevNumFetches + 1));
       }
     };
 
@@ -38,6 +44,7 @@ export const useChatScroll = ({
   useEffect(() => {
     const bottomDiv = bottomRef?.current;
     const topDiv = chatRef.current;
+
     const shouldAutoScroll = () => {
       if (!hasInitialized && bottomDiv) {
         setHasInitialized(true);
@@ -59,5 +66,14 @@ export const useChatScroll = ({
         });
       }, 100);
     }
-  }, [bottomRef, chatRef, count, hasInitialized]);
+    else {
+      setTimeout(() => {
+        if (topDiv && savedScrollHeight && savedScrollHeight > 0) {
+          const scrollPosition: number = topDiv.scrollHeight - savedScrollHeight;
+          topDiv.scrollTop = scrollPosition;
+          setSavedScrollHeight(0);
+        }
+      }, 400)
+    }
+  }, [bottomRef, chatRef, count, hasInitialized, numFetches]);
 }

@@ -1,6 +1,6 @@
 import qs from "query-string";
-import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
+import { useQuery } from "@tanstack/react-query"
 
 import { ChannelObject, ConversationObject } from "@/lib/object-types"
 
