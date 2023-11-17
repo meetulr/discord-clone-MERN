@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  next-app-prod:
+    build:
+      context: .
+      target: prod
+    ports:
+      - '3000:3000'
+    env_file:
+      - .env

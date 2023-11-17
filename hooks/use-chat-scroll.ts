@@ -73,7 +73,7 @@ export const useChatScroll = ({
           topDiv.scrollTop = scrollPosition;
           setSavedScrollHeight(0);
         }
-      }, 400)
+      }, 500)
     }
   }, [bottomRef, chatRef, count, hasInitialized, numFetches]);
 }

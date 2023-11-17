@@ -13,7 +13,8 @@ const nextConfig = {
       "uploadthing.com",
       "utfs.io"
     ]
-  }
+  },
+  output: "standalone",
 }
 
 module.exports = nextConfig
