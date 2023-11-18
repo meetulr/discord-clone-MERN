@@ -1,0 +1,5 @@
+{
+  "build": {
+    "command": "docker build --target prod ."
+  }
+}
