@@ -1,4 +1,4 @@
-# Fullstack Discord Clone: Next.js 13, React, Socket.io, tailwind, shadcn, zustand, tanstack/query, Mongoose, MongoDB, Clerk Auth, Uploadthing
+## Fullstack Discord Clone: Next.js 13, React, Socket.io, tailwind, shadcn, zustand, tanstack/query, Mongoose, MongoDB, Clerk Auth, Uploadthing
 
 ### Features:
 
