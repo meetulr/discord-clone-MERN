@@ -23,7 +23,7 @@
 - Authentication with Clerk
 
 
-### Prerequisites
+### Requirements
 
 **Node version ^18.3.x**
 
