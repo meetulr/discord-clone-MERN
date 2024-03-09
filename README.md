@@ -22,7 +22,6 @@
 - MongoDB database
 - Authentication with Clerk
 
-
 ### Requirements
 
 **Node version ^18.3.x**
@@ -83,7 +82,7 @@ npm run build
 node /.next/standalone/server.js
 ```
 
-*Since we're using next [`standalone`](https://nextjs.org/docs/app/api-reference/next-config-js/output) config*
+_Since we're using next [`standalone`](https://nextjs.org/docs/app/api-reference/next-config-js/output) config_
 
 ### Using Docker
 
@@ -136,3 +135,9 @@ docker-compose up
 # Or, build and run with a single command
 docker-compose up --build
 ```
+
+### Chat Demo
+
+<video width="320" height="240" controls>
+  <source src="demo/chat-demo.mp4" type="video/mp4">
+</video>
