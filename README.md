@@ -1,5 +1,8 @@
 ## Fullstack Discord Clone: Next.js 13, React, Socket.io, tailwind, shadcn, zustand, tanstack/query, Mongoose, MongoDB, Clerk Auth, Uploadthing
 
+### Live Website
+> [https://discord-clone-next13.up.railway.app/](https://discord-clone-next13.up.railway.app/)
+
 ### Features:
 
 - Real-time messaging using Socket.io
